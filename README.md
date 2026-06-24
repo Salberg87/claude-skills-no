@@ -80,3 +80,7 @@ Not affiliated with or endorsed by Fiken or Folio. "Fiken" and "Folio" are the t
 ## Status
 
 Private/early. Use at your own risk on your own accounting data — read the scripts before you run writes. Feedback and ideas for more Norwegian-business skills welcome.
+
+## License
+
+[Apache License 2.0](LICENSE) — © 2026 Fredrik Salberg / Pifre AS. See [NOTICE](NOTICE).
