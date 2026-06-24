@@ -4,6 +4,7 @@
     { "keyword": "GOOGLE*ADS", "account": "7320", "name": "Google Ads" },
     { "keyword": "GOOGLE *ADS", "account": "7320", "name": "Google Ads" },
     { "keyword": "ANTHROPIC", "account": "6553", "name": "Anthropic" },
+    { "keyword": "CLAUDE.AI", "account": "6553", "name": "Claude.ai" },
     { "keyword": "OPENAI", "account": "6553", "name": "OpenAI" },
     { "keyword": "VERCEL", "account": "6553", "name": "Vercel" },
     { "keyword": "GITHUB", "account": "6553", "name": "GitHub" },

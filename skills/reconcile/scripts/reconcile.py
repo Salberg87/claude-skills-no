@@ -179,10 +179,18 @@ def main():
         gross = ore
         net = net_fn(gross)
         line = {"text": vendor, "vatType": vat_type, "incomeAccount": account, "net": net, "gross": gross}
-        draft = {"cash": True, "paid": True, "currency": "NOK",
-                 "invoiceIssueDate": date, "lines": [line]}
+        # A card charge is already paid, so the truthful draft is cash+paid WITH a
+        # payment line on the card account. Fiken rejects cash/paid without a payment
+        # ("Payment missing when registered as cash or paid"). If no card account is
+        # known, fall back to an unpaid supplier-style draft (no payment required) —
+        # the user settles the payment account in Fiken.
         if args.card_account:
-            draft["payments"] = [{"date": date, "account": str(args.card_account), "amount": gross}]
+            draft = {"cash": True, "paid": True, "currency": "NOK",
+                     "invoiceIssueDate": date, "lines": [line],
+                     "payments": [{"date": date, "account": str(args.card_account), "amount": gross}]}
+        else:
+            draft = {"cash": False, "paid": False, "currency": "NOK",
+                     "invoiceIssueDate": date, "lines": [line]}
         entry.update(status="proposed", vendor=vendor, account=account,
                      vatType=vat_type, draft=draft)
         plan.append(entry)
