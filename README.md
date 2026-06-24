@@ -1,23 +1,29 @@
 # claude-skills-no
 
-Plug-and-play **Agent Skills** for Norwegian business tools — for [Claude Code](https://claude.com/claude-code) and compatible agents.
+**Let your AI agent read your Norwegian accounting and bank — without ever being able to touch the money.**
 
-A growing collection. First two skills wrap the accounting/banking APIs most Norwegian one-person companies and small businesses actually use day to day:
+Plug-and-play **Agent Skills** for [Claude Code](https://claude.com/claude-code) and compatible agents. A growing collection wrapping the tools Norwegian small businesses actually run on:
 
-| Skill                     | What it does                                                                                                                                      | Scope                                                                     |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [**fiken**](skills/fiken) | Query the [Fiken](https://fiken.no) accounting API — costs/result reports, balances, transactions, purchases, sales, invoices, contacts, receipts | Read freely · writes are **drafts only** · posting to the ledger is gated |
-| [**folio**](skills/folio) | Query the [Folio](https://folio.no) business-banking API — accounts, transactions, balances, bookkeeping events, receipts, statement PDFs         | Read + bookkeeping only · **never moves money**                           |
+| Skill                     | What it does                                                                                                                                | Scope                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [**folio**](skills/folio) | The [Folio](https://folio.no) business-banking API — accounts, transactions, balances, bookkeeping events, receipts, statement PDFs         | Read + bookkeeping only · **money movement is impossible**                |
+| [**fiken**](skills/fiken) | The [Fiken](https://fiken.no) accounting API — costs/result reports, balances, transactions, purchases, sales, invoices, contacts, receipts | Read freely · writes are **drafts only** · posting to the ledger is gated |
 
-Both are thin, auditable `curl` wrappers (bash + a little Python, stdlib only). No SDK, no daemon, no telemetry. The agent reads `SKILL.md`, runs one script, gets clean JSON or a formatted report.
+Thin, auditable `curl` wrappers (bash + a little stdlib Python). No SDK, no daemon, no telemetry — you can read every line in a minute. The agent reads `SKILL.md`, runs one script, gets clean JSON or a formatted report.
+
+## Why this exists
+
+- **The only Folio integration anywhere.** As far as we can tell, this is the first and only public integration with Folio's banking API — on GitHub or off it. If you bank with Folio and want an AI agent to see your transactions and help with bookkeeping, this is it.
+- **Safety is enforced in code, not asked for in a prompt.** Most AI-accounting tools wave a "⚠️ please confirm" comment at the model and hope. Here the guardrails are in the scripts: a payment is not a command that exists, and posting to the ledger physically refuses to run without an explicit flag. An agent that goes rogue still cannot move your money or silently book an entry.
+- **Built for the regnskap reality, not just the API.** `costs` and `result` are computed from general-ledger movement (the authoritative figure), pagination is automatic, amounts are converted from øre — the things you'd otherwise get wrong.
 
 ## Safety model
 
 These skills touch live accounting and banking data, so the guardrails are baked into the scripts, not just the prompts:
 
 - **Reads are free.** Anything that only fetches data runs without confirmation.
-- **Fiken writes create drafts (kladd) only.** Posting a draft to the ledger (`bokføring`) is irreversible — it's gated behind an explicit `--confirm` flag _and_ the skill instructs the agent to get your OK first.
-- **Folio has no payment commands at all** — by design. A read/bookkeeping API key has no payment scope, and money movement stays manual.
+- **Folio cannot move money — at all.** There is deliberately no payment command in the wrapper, and the API key it uses has no payment scope. Even a compromised or confused agent has no path to a transfer.
+- **Fiken writes create drafts (kladd) only.** Posting a draft to the ledger (`bokføring`) is irreversible — it's gated behind an explicit `--confirm` flag enforced in the script _and_ the skill instructs the agent to get your OK first. No flag, no booking.
 
 ## Install
 
