@@ -4,10 +4,11 @@
 
 Plug-and-play **Agent Skills** for [Claude Code](https://claude.com/claude-code) and compatible agents. A growing collection wrapping the tools Norwegian small businesses actually run on:
 
-| Skill                     | What it does                                                                                                                                | Scope                                                                     |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [**folio**](skills/folio) | The [Folio](https://folio.no) business-banking API — accounts, transactions, balances, bookkeeping events, receipts, statement PDFs         | Read + bookkeeping only · **money movement is impossible**                |
-| [**fiken**](skills/fiken) | The [Fiken](https://fiken.no) accounting API — costs/result reports, balances, transactions, purchases, sales, invoices, contacts, receipts | Read freely · writes are **drafts only** · posting to the ledger is gated |
+| Skill                             | What it does                                                                                                                                | Scope                                                                     |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [**folio**](skills/folio)         | The [Folio](https://folio.no) business-banking API — accounts, transactions, balances, bookkeeping events, receipts, statement PDFs         | Read + bookkeeping only · **money movement is impossible**                |
+| [**fiken**](skills/fiken)         | The [Fiken](https://fiken.no) accounting API — costs/result reports, balances, transactions, purchases, sales, invoices, contacts, receipts | Read freely · writes are **drafts only** · posting to the ledger is gated |
+| [**reconcile**](skills/reconcile) | Match Folio card charges/events against Fiken and book the unmatched ones — offline planning, count-based dedup, VAT classification         | Plans offline · creates **drafts only** · booking + complete stay manual  |
 
 Thin, auditable `curl` wrappers (bash + a little stdlib Python). No SDK, no daemon, no telemetry — you can read every line in a minute. The agent reads `SKILL.md`, runs one script, gets clean JSON or a formatted report.
 
@@ -16,6 +17,7 @@ Thin, auditable `curl` wrappers (bash + a little stdlib Python). No SDK, no daem
 - **Covers Folio, not just Fiken.** If you bank with Folio and want an AI agent to see your transactions and help with bookkeeping, the `folio` skill does exactly that — accounts, transactions, events, receipts, statements.
 - **Safety is enforced in code, not asked for in a prompt.** Most AI-accounting tools wave a "⚠️ please confirm" comment at the model and hope. Here the guardrails are in the scripts: a payment is not a command that exists, and posting to the ledger physically refuses to run without an explicit flag. An agent that goes rogue still cannot move your money or silently book an entry.
 - **Built for the regnskap reality, not just the API.** `costs` and `result` are computed from general-ledger movement (the authoritative figure), pagination is automatic, amounts are converted from øre — the things you'd otherwise get wrong.
+- **Reconciliation that proposes, never commits.** The `reconcile` skill matches Folio charges to Fiken and drafts the bookings — but the matching is offline, the writes are drafts, and posting to the ledger or marking a bank event done stays a human decision. Automation up to the point where a mistake would cost you, and not one step further.
 
 ## Safety model
 

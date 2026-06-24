@@ -1,0 +1,15 @@
+{
+  "_comment": "Vendor classification rules for reconcile.py. Copy to rules.json and edit. First matching keyword (case-insensitive, substring of the Folio charge description) wins. 'account' is the Fiken cost account. 'goods_accounts' lists accounts that are physical goods (import VAT via customs → vatType NONE) rather than services.",
+  "vendors": [
+    { "keyword": "GOOGLE*ADS", "account": "7320", "name": "Google Ads" },
+    { "keyword": "GOOGLE *ADS", "account": "7320", "name": "Google Ads" },
+    { "keyword": "ANTHROPIC", "account": "6553", "name": "Anthropic" },
+    { "keyword": "OPENAI", "account": "6553", "name": "OpenAI" },
+    { "keyword": "VERCEL", "account": "6553", "name": "Vercel" },
+    { "keyword": "GITHUB", "account": "6553", "name": "GitHub" },
+    { "keyword": "FIGMA", "account": "6553", "name": "Figma" },
+    { "keyword": "MICROSOFT", "account": "6553", "name": "Microsoft" },
+    { "keyword": "POSTNORD", "account": "6100", "name": "PostNord" }
+  ],
+  "goods_accounts": ["1200", "6800"]
+}
