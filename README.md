@@ -1,0 +1,76 @@
+# claude-skills-no
+
+Plug-and-play **Agent Skills** for Norwegian business tools — for [Claude Code](https://claude.com/claude-code) and compatible agents.
+
+A growing collection. First two skills wrap the accounting/banking APIs most Norwegian one-person companies and small businesses actually use day to day:
+
+| Skill                     | What it does                                                                                                                                      | Scope                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [**fiken**](skills/fiken) | Query the [Fiken](https://fiken.no) accounting API — costs/result reports, balances, transactions, purchases, sales, invoices, contacts, receipts | Read freely · writes are **drafts only** · posting to the ledger is gated |
+| [**folio**](skills/folio) | Query the [Folio](https://folio.no) business-banking API — accounts, transactions, balances, bookkeeping events, receipts, statement PDFs         | Read + bookkeeping only · **never moves money**                           |
+
+Both are thin, auditable `curl` wrappers (bash + a little Python, stdlib only). No SDK, no daemon, no telemetry. The agent reads `SKILL.md`, runs one script, gets clean JSON or a formatted report.
+
+## Safety model
+
+These skills touch live accounting and banking data, so the guardrails are baked into the scripts, not just the prompts:
+
+- **Reads are free.** Anything that only fetches data runs without confirmation.
+- **Fiken writes create drafts (kladd) only.** Posting a draft to the ledger (`bokføring`) is irreversible — it's gated behind an explicit `--confirm` flag _and_ the skill instructs the agent to get your OK first.
+- **Folio has no payment commands at all** — by design. A read/bookkeeping API key has no payment scope, and money movement stays manual.
+
+## Install
+
+Each skill is a self-contained folder under `skills/`. Drop the ones you want into your agent's skills directory.
+
+**Claude Code (per-user):**
+
+```bash
+git clone https://github.com/Salberg87/claude-skills-no.git
+cp -r claude-skills-no/skills/fiken ~/.claude/skills/fiken
+cp -r claude-skills-no/skills/folio ~/.claude/skills/folio
+```
+
+(For a single project instead, copy into `.claude/skills/` inside the project.)
+
+## Setup
+
+Each skill needs credentials in the environment. Export them in your shell, or keep them in a file and point an env var at it (the scripts auto-load it).
+
+**Fiken** — personal API token from _Fiken → Innstillinger → API_:
+
+```bash
+export FIKEN_API_TOKEN=...
+export FIKEN_COMPANY_SLUG=your-company-as
+# or: cp skills/fiken/env.example ~/.config/fiken/.env && export FIKEN_ENV=~/.config/fiken/.env
+```
+
+**Folio** — API key from <https://app.folio.no/til/api-tilgang>:
+
+```bash
+export FOLIO_API_KEY=...
+# or: cp skills/folio/env.example ~/.config/folio/.env && export FOLIO_ENV=~/.config/folio/.env
+```
+
+Requires `curl`, `python3`, and (optional, for pretty output) `jq`.
+
+## Quick check
+
+```bash
+FIKEN_API_TOKEN=... FIKEN_COMPANY_SLUG=your-company-as \
+  bash skills/fiken/scripts/fiken.sh whoami
+
+FOLIO_API_KEY=... bash skills/folio/scripts/folio.sh accounts
+```
+
+Each script also has built-in help: `bash skills/fiken/scripts/fiken.sh help`.
+
+## Author
+
+Built by **Fredrik Salberg** — [Pifre AS](https://pifre.no), Oslo. Made because running a Norwegian AS shouldn't mean clicking through three dashboards to answer "what did I spend last month."
+
+Not affiliated with or endorsed by Fiken or Folio. "Fiken" and "Folio" are the trademarks of their respective owners; these skills just call their public APIs.
+
+## Status
+
+Private/early. Use at your own risk on your own accounting data — read the scripts before you run writes. Feedback and ideas for more Norwegian-business skills welcome.

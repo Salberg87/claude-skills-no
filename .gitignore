@@ -1,0 +1,21 @@
+# Never commit secrets
+.env
+.env.local
+*.env
+!*.env.example
+.zshrc.secrets
+secrets/
+
+# Generated / downloaded artifacts
+*.pdf
+*.csv
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
