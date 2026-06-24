@@ -13,7 +13,7 @@ Thin, auditable `curl` wrappers (bash + a little stdlib Python). No SDK, no daem
 
 ## Why this exists
 
-- **The only Folio integration anywhere.** As far as we can tell, this is the first and only public integration with Folio's banking API — on GitHub or off it. If you bank with Folio and want an AI agent to see your transactions and help with bookkeeping, this is it.
+- **Covers Folio, not just Fiken.** If you bank with Folio and want an AI agent to see your transactions and help with bookkeeping, the `folio` skill does exactly that — accounts, transactions, events, receipts, statements.
 - **Safety is enforced in code, not asked for in a prompt.** Most AI-accounting tools wave a "⚠️ please confirm" comment at the model and hope. Here the guardrails are in the scripts: a payment is not a command that exists, and posting to the ledger physically refuses to run without an explicit flag. An agent that goes rogue still cannot move your money or silently book an entry.
 - **Built for the regnskap reality, not just the API.** `costs` and `result` are computed from general-ledger movement (the authoritative figure), pagination is automatic, amounts are converted from øre — the things you'd otherwise get wrong.
 
