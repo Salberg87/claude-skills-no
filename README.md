@@ -1,8 +1,12 @@
 # claude-skills-no
 
-**Let your AI agent read your Norwegian accounting and bank — without ever being able to touch the money.**
+**Fiken and Folio skills for Claude Code and other AI agents. Let your agent read your Norwegian accounting and bank, draft bookings and reconcile, without ever being able to touch the money.**
 
-Plug-and-play **Agent Skills** for [Claude Code](https://claude.com/claude-code) and compatible agents. A growing collection wrapping the tools Norwegian small businesses actually run on:
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-SKILL.md-black)](https://agentskills.io)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-ready-d97757)](https://claude.com/claude-code)
+
+Plug-and-play **Agent Skills** for [Claude Code](https://claude.com/claude-code) and other agents that read `SKILL.md`. A growing collection wrapping the tools Norwegian small businesses actually run on:
 
 | Skill                             | What it does                                                                                                                                | Scope                                                                     |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -11,6 +15,17 @@ Plug-and-play **Agent Skills** for [Claude Code](https://claude.com/claude-code)
 | [**reconcile**](skills/reconcile) | Match Folio card charges/events against Fiken and book the unmatched ones — offline planning, count-based dedup, VAT classification         | Plans offline · creates **drafts only** · booking + complete stay manual  |
 
 Thin, auditable `curl` wrappers (bash + a little stdlib Python). No SDK, no daemon, no telemetry — you can read every line in a minute. The agent reads `SKILL.md`, runs one script, gets clean JSON or a formatted report.
+
+## What you can ask
+
+Once installed, just talk to your agent:
+
+- *"What did we spend on software in Q3?"* (fiken `costs`)
+- *"Show the result for September next to August."* (fiken `result`)
+- *"Upload this receipt to the Fiken inbox."* (fiken `inbox-upload`)
+- *"List last week's Folio card transactions with merchant names."* (folio `transactions --merchants`)
+- *"Download the August account statement as PDF."* (folio `statement`)
+- *"Reconcile September's Folio card charges against Fiken and draft what's missing."* (reconcile)
 
 ## Why this exists
 
@@ -29,17 +44,21 @@ These skills touch live accounting and banking data, so the guardrails are baked
 
 ## Install
 
-Each skill is a self-contained folder under `skills/`. Drop the ones you want into your agent's skills directory.
+**Any agent, one command** (via the [`skills`](https://www.npmjs.com/package/skills) CLI):
 
-**Claude Code (per-user):**
+```bash
+npx skills add Salberg87/claude-skills-no            # pick skills interactively
+npx skills add Salberg87/claude-skills-no -s '*' -g  # all skills, user-level
+```
+
+**Claude Code, manually:**
 
 ```bash
 git clone https://github.com/Salberg87/claude-skills-no.git
-cp -r claude-skills-no/skills/fiken ~/.claude/skills/fiken
-cp -r claude-skills-no/skills/folio ~/.claude/skills/folio
+cp -r claude-skills-no/skills/{fiken,folio,reconcile} ~/.claude/skills/
 ```
 
-(For a single project instead, copy into `.claude/skills/` inside the project.)
+Each skill is a self-contained folder under `skills/`. For a single project instead, copy into `.claude/skills/` inside the project. `reconcile` uses the `fiken` and `folio` skills, so install all three if you want it.
 
 ## Setup
 
@@ -75,13 +94,17 @@ Each script also has built-in help: `bash skills/fiken/scripts/fiken.sh help`.
 
 ## Author
 
-Built by **Fredrik Salberg** — [Pifre AS](https://pifre.no), Oslo. Made because running a Norwegian AS shouldn't mean clicking through three dashboards to answer "what did I spend last month."
+Built by **Fredrik Skorge Salberg** — [Pifre AS](https://pifre.no), Oslo. Made because running a Norwegian AS shouldn't mean clicking through three dashboards to answer "what did I spend last month."
 
 Not affiliated with or endorsed by Fiken or Folio. "Fiken" and "Folio" are the trademarks of their respective owners; these skills just call their public APIs.
 
 ## Status
 
-Private/early. Use at your own risk on your own accounting data — read the scripts before you run writes. Feedback and ideas for more Norwegian-business skills welcome.
+Early, and in use for our own monthly bookkeeping at Pifre AS. Use at your own risk on your own accounting data, and read the scripts before you run writes. Issues and ideas for more Norwegian business skills (Tripletex, PowerOffice, Altinn, Brønnøysund) are welcome.
+
+## På norsk
+
+Agent-skills som lar Claude Code og andre AI-agenter jobbe med regnskapet i Fiken og bedriftskontoen i Folio. Agenten kan hente kostnader og resultat, se transaksjoner, laste opp kvitteringer, lage kjøpskladder og avstemme kortkjøp i Folio mot Fiken. Bokføring krever alltid din bekreftelse, og agenten har ingen mulighet til å flytte penger. Laget for små norske AS som vil bruke mindre tid på regnskap.
 
 ## License
 
