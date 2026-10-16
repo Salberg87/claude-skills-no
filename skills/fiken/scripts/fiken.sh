@@ -17,10 +17,12 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -z "${FIKEN_API_TOKEN:-}" ] && [ -n "${FIKEN_ENV:-}" ] && [ -f "$FIKEN_ENV" ]; then
   set -a; . "$FIKEN_ENV"; set +a
 fi
-: "${FIKEN_API_TOKEN:?FIKEN_API_TOKEN not set — export it, or set FIKEN_ENV to a file that defines it}"
-: "${FIKEN_COMPANY_SLUG:?FIKEN_COMPANY_SLUG not set — export it, or set FIKEN_ENV to a file that defines it}"
+case "${1:-}" in ""|-h|--help|help) ;; *)  # help works without credentials
+  : "${FIKEN_API_TOKEN:?FIKEN_API_TOKEN not set — export it, or set FIKEN_ENV to a file that defines it}"
+  : "${FIKEN_COMPANY_SLUG:?FIKEN_COMPANY_SLUG not set — export it, or set FIKEN_ENV to a file that defines it}" ;;
+esac
 : "${FIKEN_PAGE_SIZE:=1000}"   # lower only for testing pagination
-C="$BASE/companies/$FIKEN_COMPANY_SLUG"
+C="$BASE/companies/${FIKEN_COMPANY_SLUG:-}"
 
 _fmt() { if command -v jq >/dev/null 2>&1; then jq .; else cat; fi; }
 _die() { echo "error: $*" >&2; exit 1; }

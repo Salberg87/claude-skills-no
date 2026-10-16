@@ -11,7 +11,9 @@ BASE="https://api.folio.no/v2"
 if [ -z "${FOLIO_API_KEY:-}" ] && [ -n "${FOLIO_ENV:-}" ] && [ -f "$FOLIO_ENV" ]; then
   set -a; . "$FOLIO_ENV"; set +a
 fi
-: "${FOLIO_API_KEY:?FOLIO_API_KEY not set — export it, or set FOLIO_ENV to a file that defines it}"
+case "${1:-}" in ""|-h|--help|help) ;; *)  # help works without credentials
+  : "${FOLIO_API_KEY:?FOLIO_API_KEY not set — export it, or set FOLIO_ENV to a file that defines it}" ;;
+esac
 
 # Pretty-print JSON if jq is present, else passthrough.
 _fmt() { if command -v jq >/dev/null 2>&1; then jq .; else cat; fi; }
